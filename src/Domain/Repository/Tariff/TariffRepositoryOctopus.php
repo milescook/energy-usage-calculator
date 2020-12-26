@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Repository;
+namespace Domain\Repository\Tariff;
 use GuzzleHttp\Client;
 
 class TariffRepositoryOctopus implements ITariffRepository

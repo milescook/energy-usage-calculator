@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Repository;
+namespace Domain\Repository\Tariff;
 
 interface ITariffRepository
 {

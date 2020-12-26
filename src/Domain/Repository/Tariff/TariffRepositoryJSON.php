@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Repository;
+namespace Domain\Repository\Tariff;
 
 class TariffRepositoryJSON implements ITariffRepository
 {
@@ -14,7 +14,6 @@ class TariffRepositoryJSON implements ITariffRepository
         $this->filepath = $filepath;
     }
 
-    
     /** 
      * {@inheritdoc}
      */
@@ -35,6 +34,5 @@ class TariffRepositoryJSON implements ITariffRepository
         }
 
         return $tariffs;
-
     }
 }
