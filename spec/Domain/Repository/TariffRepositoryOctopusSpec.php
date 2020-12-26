@@ -13,9 +13,10 @@ class TariffRepositoryOctopusSpec extends ObjectBehavior
         [
             "product" => "AGILE-18-02-21",
             "productCode" => "E-1R-AGILE-18-02-21-K",
-            "apiKey" => "wibble"
+            "username" => "dave",
+            "password" => "wibble"
         ];
-        
+
         $this->beConstructedWith($config);
     }
     function it_is_initializable()

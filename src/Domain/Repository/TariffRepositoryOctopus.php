@@ -4,9 +4,12 @@ namespace Domain\Repository;
 
 class TariffRepositoryOctopus implements ITariffRepository
 {
-    /** @var string apiKey */
-    var $apiKey;
-    
+    /** @var string username */
+    var $username;
+
+    /** @var string password */
+    var $password;
+
     /** @var string API Endpoint  */
     var $octopusEndpoint 
     = "https://api.octopus.energy/v1/products/{product}/electricity-tariffs/{productCode}/standard-unit-rates/";
@@ -20,7 +23,8 @@ class TariffRepositoryOctopus implements ITariffRepository
 
         $this->octopusEndpoint = str_ireplace("{product}",$config["product"],$this->octopusEndpoint);
         $this->octopusEndpoint = str_ireplace("{productCode}",$config["productCode"],$this->octopusEndpoint);
-        $this->apiKey = $config["apiKey"];
+        $this->username = $config["username"];
+        $this->password = $config["password"];
     }
 
     function validateConfig($config)
@@ -31,13 +35,16 @@ class TariffRepositoryOctopus implements ITariffRepository
         if(!isset($config["productCode"]))
             throw new \Exception("Missing config item: productCode");
 
-        if(!isset($config["apiKey"]))
-            throw new \Exception("Missing config item: apiKey");
+        if(!isset($config["username"]))
+            throw new \Exception("Missing config item: username");
+
+        if(!isset($config["password"]))
+            throw new \Exception("Missing config item: password");
     }
     /** 
      * {@inheritdoc}
      */
-    public function getTariffObjects() : array
+    public function getTariffObjects($date) : array
     {
         $tariffObjects = [];
 

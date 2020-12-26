@@ -1,11 +1,15 @@
 <?php
+require 'vendor/autoload.php';
+use Domain\CalculatorService;
+use Domain\Repository\TariffRepositoryJSON;
 
 $dateUsage = "2020-12-24";
-$dateTariffs = "2020-12-27";
+$dateTariffs = "2020-12-24";
 $standingCharge = 21;
 
+$CalculatorService = new CalculatorService(new TariffRepositoryJSON("tariffs.json"));
 
-$tariffPeriods = getTariffObjects($dateTariffs,"tariffs.json");
+$tariffPeriods = $CalculatorService->getTariffObjects($dateTariffs);
 //$tariffPeriods += getTariffObjects($date,"tariffs2.json");
 
 ksort($tariffPeriods);
