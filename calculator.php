@@ -2,17 +2,25 @@
 require 'vendor/autoload.php';
 use Domain\CalculatorService;
 use Domain\Repository\TariffRepositoryJSON;
+use Domain\Repository\TariffRepositoryOctopus;
 
 $dateUsage = "2020-12-24";
 $dateTariffs = "2020-12-24";
 $standingCharge = 21;
 
-$CalculatorService = new CalculatorService(new TariffRepositoryJSON("tariffs.json"));
+$octopusConfig = 
+[
+    "product" => "AGILE-18-02-21",
+    "productCode" => "E-1R-AGILE-18-02-21-K",
+    "username" => "sk_live_N3j4z44u4vVcyygmvyQKkqK0",
+    "password" => ""
+];
+
+$CalculatorService = new CalculatorService(new TariffRepositoryOctopus($octopusConfig));
 
 $tariffPeriods = $CalculatorService->getTariffObjects($dateTariffs);
-//$tariffPeriods += getTariffObjects($date,"tariffs2.json");
 
-ksort($tariffPeriods);
+
 
 $consumptionObjects = getConsumptionObjects($dateUsage,"consumption.json");
 ksort($consumptionObjects);

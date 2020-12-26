@@ -1,6 +1,7 @@
 <?php
 
 namespace Domain\Repository;
+use GuzzleHttp\Client;
 
 class TariffRepositoryOctopus implements ITariffRepository
 {
@@ -10,9 +11,14 @@ class TariffRepositoryOctopus implements ITariffRepository
     /** @var string password */
     var $password;
 
-    /** @var string API Endpoint  */
-    var $octopusEndpoint 
-    = "https://api.octopus.energy/v1/products/{product}/electricity-tariffs/{productCode}/standard-unit-rates/";
+    /** @var string API base URI  */
+    var $octopusBaseUri = "https://api.octopus.energy";
+
+    /** @var string API base URI  */
+    var $octopusEndpoint = "/v1/products/{product}/electricity-tariffs/{productCode}/standard-unit-rates";
+
+    /** @var Client $client */
+    var $client;
 
     /**
      * @param array<string> $config Configuration for Octopus API
@@ -25,6 +31,8 @@ class TariffRepositoryOctopus implements ITariffRepository
         $this->octopusEndpoint = str_ireplace("{productCode}",$config["productCode"],$this->octopusEndpoint);
         $this->username = $config["username"];
         $this->password = $config["password"];
+
+        $this->client = new Client(['base_uri' => $this->octopusBaseUri]);
     }
 
     function validateConfig($config)
@@ -47,6 +55,34 @@ class TariffRepositoryOctopus implements ITariffRepository
     public function getTariffObjects($date) : array
     {
         $tariffObjects = [];
+        $response = $this->client->request('GET', $this->octopusEndpoint, ['auth' => [$this->username, $this->password]]);
+
+        $body = $response->getBody();
+        $tariffsResponseObject = json_decode($body);
+        foreach($tariffsResponseObject->results as $thisTariff)
+        {
+            if(strpos($thisTariff->valid_from,$date)===0)
+            {
+                $time = substr($thisTariff->valid_from,11,5);
+                $tariffObjects[$time] = $thisTariff;
+            }
+        }
+        if(count($tariffObjects)<48)
+        {
+            $response = $this->client->request('GET', $tariffsResponseObject->next, ['auth' => [$this->username, $this->password]]);
+
+            $body = $response->getBody();
+            $tariffsResponseObject = json_decode($body);
+            foreach($tariffsResponseObject->results as $thisTariff)
+            {
+                if(strpos($thisTariff->valid_from,$date)===0)
+                {
+                    $time = substr($thisTariff->valid_from,11,5);
+                    $tariffObjects[$time] = $thisTariff;
+                }
+            }
+        }
+        ksort($tariffObjects);
 
         return $tariffObjects;
     }
