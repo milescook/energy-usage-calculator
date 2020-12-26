@@ -1,0 +1,16 @@
+{
+    "name": "milescook/octopus-energy",
+    "description": "A service to fetch tariffs and calculate consumption data, intially using Octopus API",
+    "authors": [
+        {
+            "name": "Miles Cook",
+            "email": "miles.cook@cookieonline.net"
+        }
+    ],
+    "require": {},
+    "config": {"bin-dir": "bin"},
+    "require-dev": {
+        "phpspec/phpspec": "^7.0"
+    },
+    "autoload": {"psr-0": {"": "src"}}
+}

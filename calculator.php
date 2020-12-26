@@ -1,15 +1,16 @@
 <?php
 
-$date = "2020-12-24";
+$dateUsage = "2020-12-24";
+$dateTariffs = "2020-12-27";
 $standingCharge = 21;
 
 
-$tariffPeriods = getTariffObjects($date,"tariffs.json");
-$tariffPeriods += getTariffObjects($date,"tariffs2.json");
+$tariffPeriods = getTariffObjects($dateTariffs,"tariffs.json");
+//$tariffPeriods += getTariffObjects($date,"tariffs2.json");
 
 ksort($tariffPeriods);
 
-$consumptionObjects = getConsumptionObjects($date,"consumption.json");
+$consumptionObjects = getConsumptionObjects($dateUsage,"consumption.json");
 ksort($consumptionObjects);
 
 $costPeriods = [];
