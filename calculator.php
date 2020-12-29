@@ -2,11 +2,14 @@
 require 'vendor/autoload.php';
 use Domain\CalculatorService;
 use Domain\Repository\Consumption\ConsumptionRepositoryOctopus;
-use Domain\Repository\Tariff\TariffRepositoryJSON;
 use Domain\Repository\Tariff\TariffRepositoryOctopus;
 
-$dateUsage = "2020-12-24";
-$dateTariffs = "2020-12-24";
+
+$argDate = $argv[1];
+
+$dateUsage = $argDate;
+$dateTariffs = $argDate;
+
 $standingCharge = 21;
 
 $octopusConfigTariffs = 
@@ -31,6 +34,7 @@ $CalculatorService =
         new ConsumptionRepositoryOctopus($octopusConfigConsumption));
 
 $tariffPeriods = $CalculatorService->getTariffObjects($dateTariffs);
+print_r($tariffPeriods);
 $consumptionObjects = $CalculatorService->getConsumptionObjects($dateUsage);
 
 ksort($consumptionObjects);
