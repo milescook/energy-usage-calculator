@@ -52,10 +52,11 @@ class ConsumptionRepositoryOctopus implements IConsumptionRepository
     /** 
      * {@inheritdoc}
      */
-    public function getConsumptionObjects($date) : array
+    public function getConsumptionObjects($date,$consumptionObjects=[], $url=null) : array
     {
-        $consumptionObjects = [];
-        $response = $this->client->request('GET', $this->octopusEndpoint, ['auth' => [$this->username, $this->password]]);
+        if($url==null)
+            $url = $this->octopusEndpoint;
+        $response = $this->client->request('GET', $url, ['auth' => [$this->username, $this->password]]);
 
         $body = $response->getBody();
         $consumptionResponseObject = json_decode($body);
@@ -71,6 +72,8 @@ class ConsumptionRepositoryOctopus implements IConsumptionRepository
         
         ksort($consumptionObjects);
 
+        if(count($consumptionObjects)<48)
+            $consumptionObjects += $this->getConsumptionObjects($date,$consumptionObjects,$consumptionResponseObject->next);
         return $consumptionObjects;
     }
 }
