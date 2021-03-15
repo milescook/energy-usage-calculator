@@ -67,23 +67,36 @@ class TariffRepositoryOctopus implements ITariffRepository
                 $tariffObjects[$time] = $thisTariff;
             }
         }
+        
         if(count($tariffObjects)<48)
         {
-            $response = $this->client->request('GET', $tariffsResponseObject->next, ['auth' => [$this->username, $this->password]]);
-
-            $body = $response->getBody();
-            $tariffsResponseObject = json_decode($body);
-            foreach($tariffsResponseObject->results as $thisTariff)
-            {
-                if(strpos($thisTariff->valid_from,$date)===0)
-                {
-                    $time = substr($thisTariff->valid_from,11,5);
-                    $tariffObjects[$time] = $thisTariff;
-                }
-            }
+            $next = $this->getTariffsWithNext($tariffsResponseObject->next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
         }
+        
         ksort($tariffObjects);
 
         return $tariffObjects;
+    }
+
+    function getTariffsWithNext($next,$date,&$tariffObjects) : string
+    {
+        $response = $this->client->request('GET', $next, ['auth' => [$this->username, $this->password]]);
+
+        $body = $response->getBody();
+        $tariffsResponseObject = json_decode($body);
+        foreach($tariffsResponseObject->results as $thisTariff)
+        {
+            if(strpos($thisTariff->valid_from,$date)===0)
+            {
+                $time = substr($thisTariff->valid_from,11,5);
+                $tariffObjects[$time] = $thisTariff;
+            }
+        }
+
+        return $tariffsResponseObject->next;
     }
 }

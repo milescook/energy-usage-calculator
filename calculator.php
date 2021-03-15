@@ -44,7 +44,7 @@ $totalCost = 0;
 foreach($consumptionObjects as $time=>$thisConsumptionPeriod)
 {
     $periodCost = $thisConsumptionPeriod->consumption * $tariffPeriods[$time]->value_inc_vat;
-    //$periodCost = $thisConsumptionPeriod->consumption * 17.5;
+    //$periodCost = $thisConsumptionPeriod->consumption * 17;
     $costPeriods[$time] = $periodCost;
     $totalCost += $periodCost;
 }
