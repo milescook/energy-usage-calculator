@@ -12,6 +12,8 @@ $dateTariffs = $argDate;
 
 $standingCharge = 21;
 
+$octopusGostandingCharge = 25;
+
 $octopusConfigTariffs = 
 [
     "product" => "AGILE-18-02-21",
@@ -34,15 +36,17 @@ $CalculatorService =
         new ConsumptionRepositoryOctopus($octopusConfigConsumption));
 
 $tariffPeriods = $CalculatorService->getTariffObjects($dateTariffs);
-print_r($tariffPeriods);
+//print_r($tariffPeriods);
 $consumptionObjects = $CalculatorService->getConsumptionObjects($dateUsage);
 
 ksort($consumptionObjects);
 
 $costPeriods = [];
 $totalCost = 0;
+$totalKwh = 0;
 foreach($consumptionObjects as $time=>$thisConsumptionPeriod)
 {
+    $totalKwh += $thisConsumptionPeriod->consumption;
     $periodCost = $thisConsumptionPeriod->consumption * $tariffPeriods[$time]->value_inc_vat;
     //$periodCost = $thisConsumptionPeriod->consumption * 17;
     $costPeriods[$time] = $periodCost;
@@ -51,8 +55,11 @@ foreach($consumptionObjects as $time=>$thisConsumptionPeriod)
 
 $totalCost += $standingCharge;
 
+$octopusGoCost = $totalKwh * 17;
+$octopusGoCost += $octopusGostandingCharge;
 
 print_r($costPeriods);
 print_r("Total cost: £" . round($totalCost / 100,2) . "\n");
+print_r("Total cost at 17p/kwh: £" . round($octopusGoCost / 100,2) . "\n");
 
 

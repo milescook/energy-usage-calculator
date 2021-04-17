@@ -72,7 +72,7 @@ class ConsumptionRepositoryOctopus implements IConsumptionRepository
         
         ksort($consumptionObjects);
 
-        if(count($consumptionObjects)<47)
+        if(count($consumptionObjects)<45)
             $consumptionObjects += $this->getConsumptionObjects($date,$consumptionObjects,$consumptionResponseObject->next);
         return $consumptionObjects;
     }

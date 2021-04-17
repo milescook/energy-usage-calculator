@@ -68,9 +68,13 @@ class TariffRepositoryOctopus implements ITariffRepository
             }
         }
         
-        if(count($tariffObjects)<48)
+        if(count($tariffObjects)<46)
         {
             $next = $this->getTariffsWithNext($tariffsResponseObject->next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
+            $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
             $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
             $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
             $next = $this->getTariffsWithNext($next,$date,$tariffObjects);
